@@ -1,0 +1,57 @@
+- function declarations hoisted above var declarations.
+
+- lower function declarations overwrite higher function declarations with same name.
+
+- var declarations only hoist the name (LHS reference), they do not hoist the expression assignment (RHS reference).
+
+- unfound LHS references get automatically assigned as variables in global scope ('auto-globals') unless in strict mode.
+
+- interpreter first compiles a function, 0: function itself is declared, 1: named parameters of the function get declared, 2: other declarations inside function block (functions and var's) get hoisted (a.k.a. compiled). Then if function is later invoked, 3: named parameters of function get assigned to arguments (if any), 4: function block then executes top to bottom as expected.
+
+- therefore, you can pass arguments to function call to ensure they are assigned before anything in function block executes.
+
+- use IIFE's to wrap all code so no global variables.
+
+- create a closure variable as an empty object, from any nested scope you can assign variables as properties on this object and access them from other scopes nested in the original, this avoids global variables. Just make sure to change all later RHS executions (e.g. invocations, source operations, etc.) to reflect new object's method syntax (e.g. obj.method()). 
+
+- use IIFE's to capture i's value as a local variable when iterating with for-loop, then can use naked i inside for-loop block, e.g. pushing into a results array at a specific i to preserve order of asyncrhonous function calls, declaring a new function that does something with i but won't be called until after the for-loop finishes, etc.
+
+- if a function invocation needs to wait for execution to happen before it will run properly (e.g. see 1st below, RHS assignments need to run before variables assigned to other functions on which it's dependent, etc.), one possible solution is to wrap everything in an IIFE, return the function declaration at the end of the IIFE, then invoking it immediately after (see 2nd below). Another solution is to simply move the invocation below any dependent execution steps (see 3rd below).
+
+e.g. refactor the below:
+(function setUp(){
+  A();
+  function A(){
+    D();
+  }
+  function d(){
+    console.log('This wont print'); // 'D is not a function'
+  }
+  var D = d;
+})();
+
+
+refactored to be:
+(function setUp(){
+  function A(){
+    D();
+  }
+  function d(){
+    console.log('This should print if it works');
+  }
+  var D = d;
+  return A;
+})()();
+
+this also works:
+(function setUp(){
+  function A(){
+    D();
+  }
+  function d(){
+    console.log('This will print');
+  }
+  var D = d;
+  A();
+})();
+
