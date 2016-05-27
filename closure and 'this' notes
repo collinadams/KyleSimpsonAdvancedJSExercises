@@ -1,0 +1,7 @@
+- default this binding, a.k.a. free function invocation, binds 'this' to either the global object (non-strict mode) or undefined (strict mode)
+
+- principle of least exposure: module pattern, privatize functions within modules, an external wrapping function returns an object that has methods that retain access to closure variables
+
+- when explicitly binding 'this' keyword with .call() or .apply(), later duplicative .call() or .apply() invocations do not overwrite the original .call() or .apply() invocation, the innermost .call() or .apply() dictates the 'this' binding
+
+- .bind() seals a 'this' execution context to the function permanently. Now you don't have to worry about passing the function to async calls (event handlers, AJAX cb's, etc.) and the 'this' binding screwing up.

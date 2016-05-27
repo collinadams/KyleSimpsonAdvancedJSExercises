@@ -1,5 +1,7 @@
 - function declarations hoisted above var declarations.
 
+x * 54000 = 106000
+
 - lower function declarations overwrite higher function declarations with same name.
 
 - var declarations only hoist the name (LHS reference), they do not hoist the expression assignment (RHS reference).
