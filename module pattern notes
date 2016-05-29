@@ -1,0 +1,7 @@
+- When making module, consider accepting DOM target arguments from developer instead of hard-coding DOM refereneces within the module. This increases flexibility and reusability of the module for many DOM's, since various DOM's might have different structures.
+
+- When making a module API, can use IIFE to create a single instance of the module (most likely won't need more than one), or can create a regular module factory function, then create multiple instances by calling the module factory, and using methods on specific instances to perform actions on the various API instances.
+
+- Make sure argument passed to jQuery.ready is a function declaration, not a function invocation. This becomes important when you have to specify arguments to the function you want called when document is ready (as opposed to just passing a cb reference that doesn't need any arguments). If it is a function invocation, that function will execute immediately, instead of upon document.ready. Solve this by wrapping in a function declaration.
+
+- Modules will often need to load data from database or other external source before initializing and rendering.
