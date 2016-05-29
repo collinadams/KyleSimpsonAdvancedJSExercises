@@ -5,3 +5,5 @@
 - Make sure argument passed to jQuery.ready is a function declaration, not a function invocation. This becomes important when you have to specify arguments to the function you want called when document is ready (as opposed to just passing a cb reference that doesn't need any arguments). If it is a function invocation, that function will execute immediately, instead of upon document.ready. Solve this by wrapping in a function declaration.
 
 - Modules will often need to load data from database or other external source before initializing and rendering.
+
+- Module pattern excellent example of usefulness of closure.

@@ -5,3 +5,5 @@
 - when explicitly binding 'this' keyword with .call() or .apply(), later duplicative .call() or .apply() invocations do not overwrite the original .call() or .apply() invocation, the innermost .call() or .apply() dictates the 'this' binding
 
 - .bind() seals a 'this' execution context to the function permanently. Now you don't have to worry about passing the function to async calls (event handlers, AJAX cb's, etc.) and the 'this' binding screwing up.
+
+- module pattern example of closure usefulness. Also once(), memoization().
