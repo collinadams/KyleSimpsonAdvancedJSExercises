@@ -1,135 +1,117 @@
-var NotesManager = (function(){
+function NotesManager(){
+    this.html = "";
+    this.notes = [];
+}
 
-  function addNote(note) {
-    $notes.prepend(
-      $("<a href='#'></a>")
-      .addClass("note")
-      .text(note)
-    );
+NotesManager.prototype.addNote = function(note) {
+  this.$notes.prepend(
+    $("<a href='#'></a>")
+    .addClass("note")
+    .text(note)
+  );
+};
+
+NotesManager.prototype.addCurrentNote = function(){
+  var current_note = this.$new_note.val();
+
+  if (current_note) {
+    this.notes.push(current_note);
+    this.addNote(current_note);
+    this.$new_note.val("");
   }
+};
 
-  function addCurrentNote() {
-    var current_note = $new_note.val();
+NotesManager.prototype.showHelp = function(){
+  var self = this;
+  self.$help.show();
 
-    if (current_note) {
-      notes.push(current_note);
-      addNote(current_note);
-      $new_note.val("");
-    }
-  }
+  document.addEventListener("click",function __handler__(evt){
+    evt.preventDefault();
+    evt.stopPropagation();
+    evt.stopImmediatePropagation();
 
-  function showHelp() {
-    $help.show();
+    document.removeEventListener("click",__handler__,true);
+    self.hideHelp();
+  },true);
+};
 
-    document.addEventListener("click",function __handler__(evt){
-      evt.preventDefault();
-      evt.stopPropagation();
-      evt.stopImmediatePropagation();
+NotesManager.prototype.hideHelp = function() {
+  this.$help.hide();
+};
 
-      document.removeEventListener("click",__handler__,true);
-      hideHelp();
-    },true);
-  }
-
-  function hideHelp() {
-    $help.hide();
-  }
-
-  function handleOpenHelp(evt) {
-    if (!$help.is(":visible")) {
-      evt.preventDefault();
-      evt.stopPropagation();
-
-      showHelp();
-    }
-  }
-
-  function handleAddNote(evt) {
-    addCurrentNote();
-  }
-
-  function handleEnter(evt) {
-    if (evt.which == 13) {
-      addCurrentNote();
-    }
-  }
-
-  function handleDocumentClick(evt) {
-    $notes.removeClass("active");
-    $notes.children(".note").removeClass("highlighted");
-  }
-
-  function handleNoteClick(evt) {
+NotesManager.prototype.handleOpenHelp = function(evt) {
+  if (!this.$help.is(":visible")) {
     evt.preventDefault();
     evt.stopPropagation();
 
-    $notes.addClass("active");
-    $notes.children(".note").removeClass("highlighted");
-    $(evt.target).addClass("highlighted");
+    this.showHelp();
   }
+};
 
-  function loadData(data) {
-    for (var i=0; i<data.length; i++) {
-      notes.push(data[i]);
-    }
+NotesManager.prototype.handleAddNote = function(evt) {
+  this.addCurrentNote();
+};
+
+NotesManager.prototype.handleEnter = function(evt) {
+  if (evt.which == 13) {
+    this.addCurrentNote();
   }
+}
 
-  function init(opts) {
-    // cache references to the DOM elements we need to manage
-    $notes = $(opts.notes);
-    $new_note = $(opts.new_note);
-    $add_note = $(opts.add_note);
-    $help = $(opts.help);
-    $open_help = $(opts.open_help);
+NotesManager.prototype.handleDocumentClick = function(evt) {
+  this.$notes.removeClass("active");
+  this.$notes.children(".note").removeClass("highlighted");
+};
 
-    // build the initial list from the existing `notes` data
-    var html = "";
-    for (i=0; i<notes.length; i++) {
-      html += "<a href='#' class='note'>" + notes[i] + "</a>";
-    }
-    $notes.html(html);
+NotesManager.prototype.handleNoteClick = function(evt) {
+  evt.preventDefault();
+  evt.stopPropagation();
 
-    // listen to "help" button
-    $open_help.bind("click",handleOpenHelp);
+  this.$notes.addClass("active");
+  this.$notes.children(".note").removeClass("highlighted");
+  $(evt.target).addClass("highlighted");
+};
 
-    // listen to "add" button
-    $add_note.bind("click",handleAddNote);
-
-    // listen for <enter> in text box
-    $new_note.bind("keypress",handleEnter);
-
-    // listen for clicks outside the notes box
-    $(document).bind("click",handleDocumentClick);
-
-    // listen for clicks on note elements
-    $notes.on("click",".note",handleNoteClick);
+NotesManager.prototype.loadData = function(data) {
+  for (var i=0; i<data.length; i++) {
+    this.notes.push(data[i]);
   }
+};
 
+NotesManager.prototype.init = function(opts) {
+  // cache references to the DOM elements we need to manage
+  this.$notes = $(opts.notes);
+  this.$new_note = $(opts.new_note);
+  this.$add_note = $(opts.add_note);
+  this.$help = $(opts.help);
+  this.$open_help = $(opts.open_help);
 
-  var
-    // private `notes` data
-    notes = [],
+  // build the initial list from the existing `notes` data
+  for (i=0; i<this.notes.length; i++) {
+    this.html += "<a href='#' class='note'>" + this.notes[i] + "</a>";
+  }
+  this.$notes.html(this.html);
 
-    // DOM refs
-    $notes,
-    $new_note,
-    $add_note,
-    $help,
-    $open_help,
+  // listen to "help" button
+  this.$open_help.bind("click",this.handleOpenHelp.bind(this));
 
-    // module API
-    publicAPI = {
-      loadData: loadData,
-      init: init
-    }
-  ;
+  // listen to "add" button
+  this.$add_note.bind("click",this.handleAddNote.bind(this));
 
-  return publicAPI;
-})();
+  // listen for <enter> in text box
+  this.$new_note.bind("keypress",this.handleEnter.bind(this));
 
+  // listen for clicks outside the notes box
+  $(document).bind("click",this.handleDocumentClick.bind(this));
+
+  // listen for clicks on note elements
+  this.$notes.on("click",".note",this.handleNoteClick.bind(this));
+};
+
+var myNotes = new NotesManager();
 
 // assume this data came from the database
-NotesManager.loadData([
+myNotes.loadData([
   "This is the first note I've taken!",
   "Now is the time for all good men to come to the aid of their country.",
   "The quick brown fox jumped over the moon."
@@ -137,7 +119,7 @@ NotesManager.loadData([
 
 
 $(document).ready(function(){
-  NotesManager.init({
+  myNotes.init({
     notes: "#notes",
     new_note: "#note",
     add_note: "#add_note",
