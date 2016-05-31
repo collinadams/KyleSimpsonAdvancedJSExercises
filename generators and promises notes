@@ -1,0 +1,11 @@
+- callback hell is inversion of control, refers to handing off control to external API when passing callbacks to async functions. E.g. passing a callback to setTimeout. No guarantee that external API will call the success/failure callbacks appropriately, the correct number of times, or with the right arguments. Promises solve this since we get a promise back and we setup the listeners for promise resolution, not an external API. 
+
+- a promise is a future value or continuation event. Gives control back to us about what next step in continuation flow  looks like, rather than relying on external API.
+
+- generators, functions that have the ability to pause execution in the middle of their function block. Invoking a generator sets up an iterator, then call .next() on iterator and will execute code until pauses on the next yield statement in its function block. It doesn't ever have to fully complete.  
+
+- asynquence 'gates' are multiple parallel/simultaneous processes that need to happen before program should proceed, doesn't matter which finishes first. In asyquence, you don't have to create the promises when chaining, it does this automatically.
+
+- asynquence 'waterfall' like 'gate' but remembers order in which the processes finish.
+
+- asynquence 'runner,' a.k.a. 'spawn' in other libraries, yields out promises from generator, when yielded out promise resolves it restarts the generator.
