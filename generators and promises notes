@@ -9,3 +9,5 @@
 - asynquence 'waterfall' like 'gate' but remembers order in which the processes finish.
 
 - asynquence 'runner,' a.k.a. 'spawn' in other libraries, yields out promises from generator, when yielded out promise resolves it restarts the generator.
+
+- 'cruft' = badly designed, unnecessarily complicated, or unwanted code or software.

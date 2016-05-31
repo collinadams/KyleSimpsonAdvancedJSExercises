@@ -21,43 +21,41 @@ function output(text) {
 // The old-n-busted callback way
 
 function getFile(file) {
-	fakeAjax(file,function(text){
-		fileReceived(file,text);
+	return new Promise(function(resolve){
+			fakeAjax(file,resolve);
 	});
 }
 
-function fileReceived(file,text) {
-	// haven't received this text yet?
-	if (!responses[file]) {
-		responses[file] = text;
-	}
-
-	var files = ["file1","file2","file3"];
-
-	// loop through responses in order for rendering
-	for (var i=0; i<files.length; i++) {
-		// response received?
-		if (files[i] in responses) {
-			// response needs to be rendered?
-			if (responses[files[i]] !== true) {
-				output(responses[files[i]]);
-				responses[files[i]] = true;
-			}
-		}
-		// can't render yet
-		else {
-			// not complete!
-			return false;
-		}
-	}
-
-	output("Complete!");
-}
-
-// hold responses in whatever order they come back
-var responses = {};
 
 // request all files at once in "parallel"
-getFile("file1");
-getFile("file2");
-getFile("file3");
+var fakeUrlArr = ['file1', 'file2', 'file3'];
+
+fakeUrlArr
+.map(getFile)
+.reduce(function(chain, filePromise){
+	return chain
+		.then(function(){
+			return filePromise;
+		})
+		.then(output);
+	}, Promise.resolve())
+.then(function(){
+	console.log('Complete!');
+});
+
+
+
+// promise1
+// .then(output)
+// .then(function(){
+// 	return promise2;
+// })
+// .then(output)
+// .then(function(){
+// 	return promise3;
+// })
+// .then(output)
+// .then(function(){
+// 	output('Complete!');
+// });
+
